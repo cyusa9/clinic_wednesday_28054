@@ -6,21 +6,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import kigali.clinic.rw.domain.Patient;
 import kigali.clinic.rw.service.PatientService;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-
 @RestController 
-@RequestMapping (value = "/api/patient")
+@RequestMapping(value = "/api/patients")
 public class PatientController {
 
     @Autowired 
@@ -28,9 +20,7 @@ public class PatientController {
 
     @PostMapping(value="/save")
     public ResponseEntity<?> savePatient(@RequestBody Patient patient){
-
         String returnedMessage =  patientServ.savePatient(patient);
-
         if(returnedMessage.equals("Patient saved successfully")){
             return new ResponseEntity<>(returnedMessage, HttpStatus.OK);
         } else{
@@ -50,7 +40,6 @@ public class PatientController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletePatient(@PathVariable UUID id) {
         String result = patientServ.deletePatient(id);
-
         if ("Patient deleted successful".equals(result)) {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else{
@@ -66,5 +55,12 @@ public class PatientController {
         } else{
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
+    }
+
+    // A1
+    @GetMapping("/by-last-name")
+    public ResponseEntity<List<Patient>> getPatientsByLastName(@RequestParam("lastName") String lastName) {
+        List<Patient> patients = patientServ.getPatientsByLastName(lastName);
+        return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 }

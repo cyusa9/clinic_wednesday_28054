@@ -45,10 +45,14 @@ public class PatientService {
 
     public String updatePatient(UUID id, Patient patient) {
         if (patientRepo.existsById(id)) {
-            // patient.setId(id); // Skipping setId for now
             patientRepo.save(patient);
             return "Patient updated successfully";
         }
         return "Patient not found";
+    }
+
+    // A1
+    public List<Patient> getPatientsByLastName(String lastName) {
+        return patientRepo.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
     }
 }

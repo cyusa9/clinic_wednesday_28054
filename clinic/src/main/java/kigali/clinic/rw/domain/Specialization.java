@@ -39,4 +39,8 @@ public class Specialization {
      )
      private List<Doctor> doctors = new ArrayList<>();
 
+
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 }
+

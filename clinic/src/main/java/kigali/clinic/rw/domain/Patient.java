@@ -2,6 +2,7 @@ package kigali.clinic.rw.domain;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class Patient {
     @Column (name="date_of_birth")
     private Date dateOfBirth;
 
+    @JsonIgnore
     @OneToMany (mappedBy = "patient")
     private List<Appointment> appointments = new ArrayList<>();
 
@@ -69,4 +71,10 @@ public class Patient {
     
 
 
+
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 }
+
+
+

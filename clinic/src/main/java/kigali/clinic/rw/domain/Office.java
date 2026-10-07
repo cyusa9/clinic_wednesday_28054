@@ -1,6 +1,7 @@
 package kigali.clinic.rw.domain;
 
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +26,7 @@ public class Office {
     @Column (name="office_number", unique = true)
     private int officeNumber;
 
+    @JsonIgnore
     @OneToOne (mappedBy = "office")
     private Doctor doctor;
 
@@ -59,3 +61,5 @@ public class Office {
 
 
 }
+
+
