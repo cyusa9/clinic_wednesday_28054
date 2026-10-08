@@ -37,4 +37,10 @@ public class SpecializationController {
         String res = specService.deleteSpecialization(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+    // B3
+    @GetMapping("/unused")
+    public ResponseEntity<List<Specialization>> getUnusedSpecializations() {
+        return new ResponseEntity<>(specService.getUnusedSpecializations(), HttpStatus.OK);
+    }
 }

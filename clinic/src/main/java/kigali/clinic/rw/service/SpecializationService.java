@@ -38,4 +38,9 @@ public class SpecializationService {
         }
         return "Specialization not found";
     }
+
+    // B3
+    public List<Specialization> getUnusedSpecializations() {
+        return specRepo.findUnusedSpecializations();
+    }
 }

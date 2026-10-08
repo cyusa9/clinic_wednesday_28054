@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kigali.clinic.rw.domain.Doctor;
@@ -67,4 +68,15 @@ public class DoctorController {
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/by-specialization")
+    public ResponseEntity<List<Doctor>> getDoctorsBySpecialization(@RequestParam("name") String name) {
+        return new ResponseEntity<>(doctorServ.getDoctorsBySpecialization(name), HttpStatus.OK);
+    }
+    // B2
+    @GetMapping("/without-office")
+    public ResponseEntity<List<Doctor>> getDoctorsWithoutOffice() {
+        return new ResponseEntity<>(doctorServ.getDoctorsWithoutOffice(), HttpStatus.OK);
+    }
 }
+

@@ -10,12 +10,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import kigali.clinic.rw.domain.Patient;
 import kigali.clinic.rw.repository.PatientRepository;
+import kigali.clinic.rw.repository.DoctorRepository;
 
 @Service 
 public class PatientService {
 
     @Autowired 
     private PatientRepository patientRepo;
+
+    @Autowired
+    private DoctorRepository doctorRepo;
 
     public String savePatient(Patient patient){
         patientRepo.save(patient);
@@ -54,5 +58,15 @@ public class PatientService {
     // A1
     public List<Patient> getPatientsByLastName(String lastName) {
         return patientRepo.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
+    }
+
+    // B4 Helper
+    public boolean doctorExists(UUID doctorId) {
+        return doctorRepo.existsById(doctorId);
+    }
+
+    // B4
+    public List<Patient> getPatientsOfDoctor(UUID doctorId) {
+        return patientRepo.findPatientsByDoctorId(doctorId);
     }
 }

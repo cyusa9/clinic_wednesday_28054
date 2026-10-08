@@ -51,4 +51,13 @@ public class DoctorService {
         }
         return "Doctor not found";
     }
+
+    public List<Doctor> getDoctorsBySpecialization(String name) {
+        return doctorRepo.findBySpecializationName(name);
+    }
+    
+    public List<Doctor> getDoctorsWithoutOffice() {
+        return doctorRepo.findDoctorsWithoutOffice();
+    }
+
 }

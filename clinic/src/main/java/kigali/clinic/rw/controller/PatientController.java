@@ -63,4 +63,13 @@ public class PatientController {
         List<Patient> patients = patientServ.getPatientsByLastName(lastName);
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
+
+    // B4
+    @GetMapping("/of-doctor/{doctorId}")
+    public ResponseEntity<?> getPatientsOfDoctor(@PathVariable UUID doctorId) {
+        if (!patientServ.doctorExists(doctorId)) {
+            return new ResponseEntity<>("The doctor with that id does not exist", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(patientServ.getPatientsOfDoctor(doctorId), HttpStatus.OK);
+    }
 }
