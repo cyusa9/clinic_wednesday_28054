@@ -1,0 +1,164 @@
+{
+	"info": {
+		"_postman_id": "clinic-quiz-1234",
+		"name": "Kigali Clinic Quiz",
+		"description": "All endpoints for Kigali Clinic (CRUD, Derived Queries, JPQL, Bulk Updates, and Paging)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Part A & CRUD (Doctors)",
+			"item": [
+				{
+					"name": "Get All Doctors",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/doctor"
+					}
+				},
+				{
+					"name": "Save Doctor",
+					"request": {
+						"method": "POST",
+						"header": [ { "key": "Content-Type", "value": "application/json" } ],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"Doctor\",\n  \"dateOfBirth\": \"1985-01-01\"\n}"
+						},
+						"url": "http://localhost:8082/api/doctor/save"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part A & CRUD (Patients)",
+			"item": [
+				{
+					"name": "Get All Patients",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/patients"
+					}
+				},
+				{
+					"name": "Get Patients By Last Name (A1)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/patients/by-last-name?lastName=Uwase"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part A & CRUD (Appointments)",
+			"item": [
+				{
+					"name": "Get All Appointments",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/appointments"
+					}
+				},
+				{
+					"name": "Get Appointments By Status (A2)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/appointments/by-status?status=PENDING"
+					}
+				},
+				{
+					"name": "Get Appointments Between Dates (A3)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/appointments/between?start=2026-10-01&end=2026-11-30"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part B (JPQL & Joins)",
+			"item": [
+				{
+					"name": "Doctors by Specialization (B1)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/doctor/by-specialization?name=cardiology"
+					}
+				},
+				{
+					"name": "Doctors without Office (B2)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/doctor/without-office"
+					}
+				},
+				{
+					"name": "Unused Specializations (B3)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/specialization/unused"
+					}
+				},
+				{
+					"name": "Patients of Doctor (B4)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/patients/of-doctor/067d029b-1847-4c14-9848-eae6c0fbcda1"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part C (Aggregates & Bulk)",
+			"item": [
+				{
+					"name": "Count Canceled Appointments (C1)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/appointments/canceled-count"
+					}
+				},
+				{
+					"name": "Count Patients with Multiple Appointments (C2)",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/patients/multiple-appointments"
+					}
+				},
+				{
+					"name": "Cancel All for Patient (C3)",
+					"request": {
+						"method": "PUT",
+						"url": "http://localhost:8082/api/appointments/cancel-for-patient/067d029b-1847-4c14-9848-eae6c0fbcda1"
+					}
+				},
+				{
+					"name": "Delete All Canceled (C4)",
+					"request": {
+						"method": "DELETE",
+						"url": "http://localhost:8082/api/appointments/canceled"
+					}
+				}
+			]
+		},
+		{
+			"name": "Bonus (Paging)",
+			"item": [
+				{
+					"name": "Patients Paged",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/patients/paged?page=0&size=5"
+					}
+				},
+				{
+					"name": "Appointments Paged",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:8082/api/appointments/paged?page=0&size=5"
+					}
+				}
+			]
+		}
+	]
+}
