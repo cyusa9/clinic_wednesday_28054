@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.AppointmentStatus;
 import kigali.clinic.rw.service.AppointmentService;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -56,5 +57,31 @@ public class AppointmentController {
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
         return new ResponseEntity<>(appointmentService.getAppointmentsBetween(startDate, endDate), HttpStatus.OK);
+    }
+
+    // C1
+    @GetMapping("/canceled-count")
+    public ResponseEntity<Long> countCanceled() {
+        return new ResponseEntity<>(appointmentService.getCanceledCount(), HttpStatus.OK);
+    }
+
+    // C3
+    @PutMapping("/cancel-for-patient/{patientId}")
+    public ResponseEntity<Integer> cancelForPatient(@PathVariable UUID patientId) {
+        return new ResponseEntity<>(appointmentService.cancelForPatient(patientId), HttpStatus.OK);
+    }
+
+    // C4
+    @DeleteMapping("/canceled")
+    public ResponseEntity<Integer> deleteCanceled() {
+        return new ResponseEntity<>(appointmentService.deleteCanceled(), HttpStatus.OK);
+    }
+
+    // BONUS: Paging
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Appointment>> getAppointmentsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return new ResponseEntity<>(appointmentService.getAppointmentsPaged(page, size), HttpStatus.OK);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import kigali.clinic.rw.domain.Patient;
 import kigali.clinic.rw.service.PatientService;
+import org.springframework.data.domain.Page;
 
 @RestController 
 @RequestMapping(value = "/api/patients")
@@ -71,5 +72,19 @@ public class PatientController {
             return new ResponseEntity<>("The doctor with that id does not exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(patientServ.getPatientsOfDoctor(doctorId), HttpStatus.OK);
+    }
+
+    // C2
+    @GetMapping("/multiple-appointments")
+    public ResponseEntity<Long> countMultipleAppointments() {
+        return new ResponseEntity<>(patientServ.countPatientsWithMultipleAppointments(), HttpStatus.OK);
+    }
+
+    // BONUS: Paging
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Patient>> getPatientsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return new ResponseEntity<>(patientServ.getPatientsPaged(page, size), HttpStatus.OK);
     }
 }

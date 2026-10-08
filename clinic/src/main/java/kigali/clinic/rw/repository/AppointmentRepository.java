@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.AppointmentStatus;
 import kigali.clinic.rw.domain.Doctor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository 
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
@@ -21,4 +25,20 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
     // A4
     boolean existsByDoctorAndAppointmentDateAndStatusNot(Doctor doctor, Date appointmentDate, AppointmentStatus status);
+
+    // C1: Count canceled
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.status = 'CANCELLED'")
+    long countCanceledAppointments();
+
+    // C3: Bulk update
+    @Modifying
+    @Transactional
+    @Query("UPDATE Appointment a SET a.status = 'CANCELLED' WHERE a.patient.id = :patientId AND a.status != 'CANCELLED'")
+    int cancelAppointmentsForPatient(@Param("patientId") UUID patientId);
+
+    // C4: Bulk delete
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Appointment a WHERE a.status = 'CANCELLED'")
+    int deleteCanceledAppointments();
 }

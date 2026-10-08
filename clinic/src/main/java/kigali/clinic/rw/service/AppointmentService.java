@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.AppointmentStatus;
 import kigali.clinic.rw.repository.AppointmentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class AppointmentService {
@@ -64,5 +67,24 @@ public class AppointmentService {
     // A3
     public List<Appointment> getAppointmentsBetween(LocalDate start, LocalDate end) {
         return appointmentRepository.findByAppointmentDateBetweenOrderByAppointmentDateAsc(Date.valueOf(start), Date.valueOf(end));
+    }
+
+    // C1
+    public long getCanceledCount() {
+        return appointmentRepository.countCanceledAppointments();
+    }
+    // C3
+    public int cancelForPatient(UUID patientId) {
+        return appointmentRepository.cancelAppointmentsForPatient(patientId);
+    }
+    // C4
+    public int deleteCanceled() {
+        return appointmentRepository.deleteCanceledAppointments();
+    }
+
+    // BONUS: Paging
+    public Page<Appointment> getAppointmentsPaged(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return appointmentRepository.findAll(pageable);
     }
 }

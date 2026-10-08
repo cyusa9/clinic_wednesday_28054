@@ -11,6 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 import kigali.clinic.rw.domain.Patient;
 import kigali.clinic.rw.repository.PatientRepository;
 import kigali.clinic.rw.repository.DoctorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service 
 public class PatientService {
@@ -68,5 +71,16 @@ public class PatientService {
     // B4
     public List<Patient> getPatientsOfDoctor(UUID doctorId) {
         return patientRepo.findPatientsByDoctorId(doctorId);
+    }
+
+    // C2
+    public long countPatientsWithMultipleAppointments() {
+        return patientRepo.countPatientsWithMultipleAppointments();
+    }
+
+    // BONUS: Paging
+    public Page<Patient> getPatientsPaged(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return patientRepo.findAll(pageable);
     }
 }
