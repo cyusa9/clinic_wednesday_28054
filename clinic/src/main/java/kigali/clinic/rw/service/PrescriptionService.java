@@ -70,4 +70,8 @@ public class PrescriptionService {
         prescriptionRepo.deleteById(id);
         return "Prescription deleted successfully";
     }
+
+    public List<Object[]> getTopMedicines() {
+        return prescriptionRepo.findTopMedicines();
+    }
 }

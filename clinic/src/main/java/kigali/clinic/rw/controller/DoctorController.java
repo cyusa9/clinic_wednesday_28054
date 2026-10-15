@@ -127,4 +127,12 @@ public class DoctorController {
         List<Doctor> doctors = doctorServ.searchDoctorsByName(name);
         return new ResponseEntity<>(doctors, HttpStatus.OK);
     }
+
+    @GetMapping("/workload")
+    public ResponseEntity<List<Object[]>> getDoctorWorkload(@RequestParam("start") String start, @RequestParam("end") String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        List<Object[]> workload = doctorServ.getDoctorWorkload(startDate, endDate);
+        return new ResponseEntity<>(workload, HttpStatus.OK);
+    }
 }

@@ -68,4 +68,9 @@ public class PrescriptionController {
         }
         return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/stats/top-medicines")
+    public ResponseEntity<List<Object[]>> getTopMedicines() {
+        return new ResponseEntity<>(prescriptionService.getTopMedicines(), HttpStatus.OK);
+    }
 }
