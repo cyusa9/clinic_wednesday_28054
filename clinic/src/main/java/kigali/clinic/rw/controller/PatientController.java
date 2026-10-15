@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.Patient;
 import kigali.clinic.rw.service.PatientService;
 import org.springframework.data.domain.Page;
@@ -83,5 +84,14 @@ public class PatientController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         return new ResponseEntity<>(patientServ.getPatientsPaged(page, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/{ssNumber}/upcoming")
+    public ResponseEntity<?> getUpcomingAppointments(@PathVariable String ssNumber) {
+        List<Appointment> appointments = patientServ.getUpcomingAppointments(ssNumber);
+        if (appointments == null) {
+            return new ResponseEntity<>("The patient with that social security number does not exist", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 }

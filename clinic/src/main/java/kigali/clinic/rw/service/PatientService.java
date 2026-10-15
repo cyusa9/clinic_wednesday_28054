@@ -1,13 +1,17 @@
 package kigali.clinic.rw.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import kigali.clinic.rw.domain.Appointment;
+import kigali.clinic.rw.domain.AppointmentStatus;
 import kigali.clinic.rw.domain.Patient;
-import kigali.clinic.rw.repository.PatientRepository;
+import kigali.clinic.rw.repository.AppointmentRepository;
 import kigali.clinic.rw.repository.DoctorRepository;
+import kigali.clinic.rw.repository.PatientRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,9 @@ public class PatientService {
 
     @Autowired
     private DoctorRepository doctorRepo;
+
+    @Autowired
+    private AppointmentRepository appointmentRepo;
 
     public String savePatient(Patient patient) {
         patientRepo.save(patient);
@@ -66,5 +73,14 @@ public class PatientService {
     public Page<Patient> getPatientsPaged(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return patientRepo.findAll(pageable);
+    }
+
+    public List<Appointment> getUpcomingAppointments(String ssNumber) {
+        if (!patientRepo.existsBySsNumber(ssNumber)) {
+            return null;
+        }
+        return appointmentRepo.findByPatientSsNumberAndAppointmentDateGreaterThanEqualAndStatusNotOrderByAppointmentDateAsc(
+                ssNumber, LocalDate.now(), AppointmentStatus.CANCELLED
+        );
     }
 }
