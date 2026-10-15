@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.AppointmentStatus;
 import kigali.clinic.rw.repository.AppointmentRepository;
+import kigali.clinic.rw.repository.PrescriptionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,9 @@ public class AppointmentService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private PrescriptionRepository prescriptionRepo;
 
     public String saveAppointment(Appointment appointment) {
         if (appointment.getAppointmentDate() != null && appointment.getAppointmentDate().isBefore(LocalDate.now())) {
@@ -110,11 +114,14 @@ public class AppointmentService {
     }
 
     public String deleteAppointment(UUID id) {
-        if (appointmentRepository.existsById(id)) {
-            appointmentRepository.deleteById(id);
-            return "Appointment deleted successfully";
+        if (!appointmentRepository.existsById(id)) {
+            return "Appointment not found";
         }
-        return "Appointment not found";
+        if (prescriptionRepo.existsByAppointmentId(id)) {
+            return "That appointment has prescriptions, delete them first";
+        }
+        appointmentRepository.deleteById(id);
+        return "Appointment deleted successfully";
     }
 
     public List<Appointment> getAppointmentsByStatus(AppointmentStatus status) {
