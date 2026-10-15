@@ -2,48 +2,52 @@ package kigali.clinic.rw.domain;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.UUID;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-@Entity 
-@Table (name = "doctor")
+@Entity
+@Table(name = "doctor")
 public class Doctor {
-    
-    @Id 
-    @GeneratedValue (strategy = GenerationType.UUID)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column (name="first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column (name="last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column (name="date_of_birth")
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
-    @OneToOne 
-    @JoinColumn (name="office_id")
+    @OneToOne
+    @JoinColumn(name = "office_id")
     private Office office;
 
-    @JsonIgnore
-    @ManyToMany (mappedBy = "doctors")
+    @ManyToMany
+    @JoinTable(
+        name = "doctor_specialization",
+        joinColumns = @JoinColumn(name = "doctor_id"),
+        inverseJoinColumns = @JoinColumn(name = "specialization_id")
+    )
     private List<Specialization> specializations = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany (mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments = new ArrayList<>();
 
     public String getFirstName() {
@@ -70,6 +74,14 @@ public class Doctor {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Office getOffice() {
+        return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
+    }
+
     public List<Specialization> getSpecializations() {
         return specializations;
     }
@@ -86,13 +98,11 @@ public class Doctor {
         this.appointments = appointments;
     }
 
-    
+    public UUID getId() {
+        return id;
+    }
 
-
-
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }
-
-
-

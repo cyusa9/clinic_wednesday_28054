@@ -5,13 +5,21 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import kigali.clinic.rw.domain.Specialization;
 import kigali.clinic.rw.service.SpecializationService;
 
 @RestController
-@RequestMapping("/api/specialization")
+@RequestMapping("/api/specializations")
 public class SpecializationController {
+
     @Autowired
     private SpecializationService specService;
 
@@ -38,7 +46,6 @@ public class SpecializationController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    // B3
     @GetMapping("/unused")
     public ResponseEntity<List<Specialization>> getUnusedSpecializations() {
         return new ResponseEntity<>(specService.getUnusedSpecializations(), HttpStatus.OK);

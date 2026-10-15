@@ -2,29 +2,35 @@ package kigali.clinic.rw.controller;
 
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import kigali.clinic.rw.domain.Patient;
 import kigali.clinic.rw.service.PatientService;
 import org.springframework.data.domain.Page;
 
-@RestController 
-@RequestMapping(value = "/api/patients")
+@RestController
+@RequestMapping("/api/patients")
 public class PatientController {
 
-    @Autowired 
+    @Autowired
     private PatientService patientServ;
 
-    @PostMapping(value="/save")
-    public ResponseEntity<?> savePatient(@RequestBody Patient patient){
-        String returnedMessage =  patientServ.savePatient(patient);
-        if(returnedMessage.equals("Patient saved successfully")){
+    @PostMapping("/save")
+    public ResponseEntity<?> savePatient(@RequestBody Patient patient) {
+        String returnedMessage = patientServ.savePatient(patient);
+        if (returnedMessage.equals("Patient saved successfully")) {
             return new ResponseEntity<>(returnedMessage, HttpStatus.OK);
-        } else{
+        } else {
             return new ResponseEntity<>("Patient is already exist", HttpStatus.CONFLICT);
         }
     }
@@ -41,9 +47,9 @@ public class PatientController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletePatient(@PathVariable UUID id) {
         String result = patientServ.deletePatient(id);
-        if ("Patient deleted successful".equals(result)) {
+        if ("Patient deleted successfully".equals(result)) {
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } else{
+        } else {
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
     }
@@ -53,19 +59,17 @@ public class PatientController {
         String result = patientServ.updatePatient(id, patientDetails);
         if ("Patient updated successfully".equals(result)) {
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } else{
+        } else {
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
     }
 
-    // A1
     @GetMapping("/by-last-name")
     public ResponseEntity<List<Patient>> getPatientsByLastName(@RequestParam("lastName") String lastName) {
         List<Patient> patients = patientServ.getPatientsByLastName(lastName);
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
-    // B4
     @GetMapping("/of-doctor/{doctorId}")
     public ResponseEntity<?> getPatientsOfDoctor(@PathVariable UUID doctorId) {
         if (!patientServ.doctorExists(doctorId)) {
@@ -74,13 +78,6 @@ public class PatientController {
         return new ResponseEntity<>(patientServ.getPatientsOfDoctor(doctorId), HttpStatus.OK);
     }
 
-    // C2
-    @GetMapping("/multiple-appointments")
-    public ResponseEntity<Long> countMultipleAppointments() {
-        return new ResponseEntity<>(patientServ.countPatientsWithMultipleAppointments(), HttpStatus.OK);
-    }
-
-    // BONUS: Paging
     @GetMapping("/paged")
     public ResponseEntity<Page<Patient>> getPatientsPaged(
             @RequestParam(defaultValue = "0") int page,

@@ -2,7 +2,6 @@ package kigali.clinic.rw.domain;
 
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,23 +10,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-@Entity 
-@Table (name="office")
+@Entity
+@Table(name = "office")
 public class Office {
-    
-    @Id 
-    @GeneratedValue (strategy = GenerationType.UUID)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-
-    @Column (name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column (name="office_number", unique = true)
+    @Column(name = "office_number", unique = true)
     private int officeNumber;
 
     @JsonIgnore
-    @OneToOne (mappedBy = "office")
+    @OneToOne(mappedBy = "office")
     private Doctor doctor;
 
     public String getName() {
@@ -50,16 +48,15 @@ public class Office {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public Doctor getDoctor() {
         return doctor;
     }
 
-    public void setId(UUID id2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setId'");
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
-
-
 }
-
-

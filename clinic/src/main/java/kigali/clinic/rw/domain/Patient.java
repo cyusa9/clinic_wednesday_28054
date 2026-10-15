@@ -2,10 +2,9 @@ package kigali.clinic.rw.domain;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.UUID;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,26 +13,28 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-
-@Entity 
-@Table (name="patient")
+@Entity
+@Table(name = "patient")
 public class Patient {
-    
-    @Id 
-    @GeneratedValue (strategy = GenerationType.UUID)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column (name="first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column (name="last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column (name="date_of_birth")
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
+    @Column(name = "ss_number", unique = true)
+    private String ssNumber;
+
     @JsonIgnore
-    @OneToMany (mappedBy = "patient")
+    @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments = new ArrayList<>();
 
     public String getFirstName() {
@@ -60,6 +61,14 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public String getSsNumber() {
+        return ssNumber;
+    }
+
+    public void setSsNumber(String ssNumber) {
+        this.ssNumber = ssNumber;
+    }
+
     public List<Appointment> getAppointments() {
         return appointments;
     }
@@ -68,13 +77,11 @@ public class Patient {
         this.appointments = appointments;
     }
 
-    
+    public UUID getId() {
+        return id;
+    }
 
-
-
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }
-
-
-
