@@ -1,8 +1,7 @@
 package kigali.clinic.rw.domain;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,37 +13,37 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Entity 
-@Table (name="appointment")
+@Entity
+@Table(name = "appointment")
 public class Appointment {
-    
-    @Id 
-    @GeneratedValue (strategy = GenerationType.UUID)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column (name="appointment_date")
-    private Date appointmentDate;
+    @Column(name = "appointment_date")
+    private LocalDate appointmentDate;
 
-    @Column (name="reason")
+    @Column(name = "reason")
     private String reason;
 
-    @Enumerated (EnumType.STRING)
-    @Column (name="status")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private AppointmentStatus status;
 
-    @ManyToOne 
-    @JoinColumn (name="patient_id")
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    @ManyToOne 
-    @JoinColumn (name="doctor_id")
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-    public Date getAppointmentDate() {
+    public LocalDate getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(Date appointmentDate) {
+    public void setAppointmentDate(LocalDate appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
@@ -80,11 +79,11 @@ public class Appointment {
         this.doctor = doctor;
     }
 
-    
+    public UUID getId() {
+        return id;
+    }
 
-
-
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }
-
