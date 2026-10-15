@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "clinic-quiz2-28054",
+		"name": "Kigali Clinic Quiz 2",
+		"description": "Complete Postman test suite for Quiz 2: Part A (Doctors & Offices), Part B (Appointment Rules), Part C (Prescriptions), Part D (Agenda & Dashboard Reports), and Bonus (Top Medicines & Doctor Workload).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8082"
+		},
+		{
+			"key": "doctorId",
+			"value": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb03"
+		},
+		{
+			"key": "specializationId",
+			"value": "5c3e7b1a-8e2d-4f10-9123-4d6f8a0b2c01"
+		},
+		{
+			"key": "appointmentId",
+			"value": "7a2f5c9e-1d3b-4860-84a1-3e5d7b9c1a05"
+		},
+		{
+			"key": "prescriptionId",
+			"value": "e4a1c8f3-52b0-46d7-8914-0f3b7c2e8a1d"
+		},
+		{
+			"key": "patientSsNumber",
+			"value": "SSN-1001"
+		}
+	],
+	"item": [
+		{
+			"name": "Part A: Doctors & Offices",
+			"item": [
+				{
+					"name": "A1: Assign Specialization to Doctor (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{baseUrl}}/api/doctors/{{doctorId}}/specializations/{{specializationId}}"
+					}
+				},
+				{
+					"name": "A2: Remove Specialization from Doctor (DELETE)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/api/doctors/{{doctorId}}/specializations/{{specializationId}}"
+					}
+				},
+				{
+					"name": "A3: Free Offices (JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/offices/free"
+					}
+				},
+				{
+					"name": "A4: Move Doctor to Office (DERIVED)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctors/{{doctorId}}/office?officeNumber=104",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "doctors", "{{doctorId}}", "office"],
+							"query": [
+								{
+									"key": "officeNumber",
+									"value": "104"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Part B: Appointment Rules",
+			"item": [
+				{
+					"name": "B1: Save Appointment (Future Date & SCHEDULED default)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointmentDate\": \"2026-11-15\",\n  \"reason\": \"Routine cardiology checkup\",\n  \"patient\": {\n    \"id\": \"3e8f1a2c-4b5d-4970-9812-7d6f5a4b3c01\"\n  },\n  \"doctor\": {\n    \"id\": \"{{doctorId}}\"\n  }\n}"
+						},
+						"url": "{{baseUrl}}/api/appointments/save"
+					}
+				},
+				{
+					"name": "B1: Save Appointment - Past Date Check (Expect 400)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointmentDate\": \"2020-01-01\",\n  \"reason\": \"Past date appointment test\",\n  \"patient\": {\n    \"id\": \"3e8f1a2c-4b5d-4970-9812-7d6f5a4b3c01\"\n  },\n  \"doctor\": {\n    \"id\": \"{{doctorId}}\"\n  }\n}"
+						},
+						"url": "{{baseUrl}}/api/appointments/save"
+					}
+				},
+				{
+					"name": "B2: Update Appointment Status to CONFIRMED (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/status?status=CONFIRMED",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "appointments", "{{appointmentId}}", "status"],
+							"query": [
+								{
+									"key": "status",
+									"value": "CONFIRMED"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "B2: Invalid Status Progression Check (Expect 400)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/status?status=SCHEDULED",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "appointments", "{{appointmentId}}", "status"],
+							"query": [
+								{
+									"key": "status",
+									"value": "SCHEDULED"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "B3: Reschedule Appointment (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/reschedule?newDate=2026-11-20",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "appointments", "{{appointmentId}}", "reschedule"],
+							"query": [
+								{
+									"key": "newDate",
+									"value": "2026-11-20"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Part C: Prescriptions",
+			"item": [
+				{
+					"name": "C1: Save Prescription (POST)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"500mg 3x daily\",\n  \"durationDays\": 7,\n  \"appointment\": {\n    \"id\": \"{{appointmentId}}\"\n  }\n}"
+						},
+						"url": "{{baseUrl}}/api/prescriptions/save"
+					}
+				},
+				{
+					"name": "C2: Get Prescriptions By Appointment (DERIVED)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/prescriptions/appointment/{{appointmentId}}"
+					}
+				},
+				{
+					"name": "C3: Patient Prescription History (JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/prescriptions/patient/{{patientSsNumber}}"
+					}
+				},
+				{
+					"name": "C4: Update Prescription (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"medicineName\": \"Amoxicillin Clavulanate\",\n  \"dosage\": \"625mg 2x daily\",\n  \"durationDays\": 10\n}"
+						},
+						"url": "{{baseUrl}}/api/prescriptions/{{prescriptionId}}"
+					}
+				},
+				{
+					"name": "C4: Delete Prescription (DELETE)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/api/prescriptions/{{prescriptionId}}"
+					}
+				},
+				{
+					"name": "C4: Cascade Guard on Appointment Delete (Expect 409)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/api/appointments/{{appointmentId}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part D: Agenda, Search & Dashboard",
+			"item": [
+				{
+					"name": "D1: Doctor Daily Agenda (DERIVED)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctors/{{doctorId}}/agenda?date=2026-10-20",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "doctors", "{{doctorId}}", "agenda"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2026-10-20"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "D2: Patient Upcoming Appointments (DERIVED)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/patients/{{patientSsNumber}}/upcoming"
+					}
+				},
+				{
+					"name": "D3: Search Doctors by Name (JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctors/search?name=Jean",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "doctors", "search"],
+							"query": [
+								{
+									"key": "name",
+									"value": "Jean"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "D4: Dashboard Summary Report (Map)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/dashboard/summary"
+					}
+				}
+			]
+		},
+		{
+			"name": "Bonus (+10 Marks)",
+			"item": [
+				{
+					"name": "Bonus 1: Top Prescribed Medicines (JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/prescriptions/stats/top-medicines"
+					}
+				},
+				{
+					"name": "Bonus 2: Doctor Workload (JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctors/workload?start=2026-10-01&end=2026-10-31",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "doctors", "workload"],
+							"query": [
+								{
+									"key": "start",
+									"value": "2026-10-01"
+								},
+								{
+									"key": "end",
+									"value": "2026-10-31"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
